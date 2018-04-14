@@ -15,10 +15,10 @@ using System.Windows.Shapes;
 
 namespace MazeEsc_ah_pe {
     /// <summary>
-    /// Interaction logic for WakeUp.xaml
+    /// Interaction logic for Maze.xaml
     /// </summary>
-    public partial class WakeUp : Page {
-        public WakeUp() {
+    public partial class Maze : Page {
+        public Maze() {
             InitializeComponent();
         }
     }
