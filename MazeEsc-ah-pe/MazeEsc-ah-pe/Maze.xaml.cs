@@ -101,7 +101,14 @@ namespace MazeEsc_ah_pe {
         private void AddBottomButtons() {
             RowDefinition row = this.grid.RowDefinitions[21];
             ColumnDefinition col = this.grid.ColumnDefinitions[3];
-            //TODO add return to menu button
+
+            TextBlock text1 = new TextBlock();
+            text1.Text = "Author Name";
+            text1.Background = new SolidColorBrush(Colors.Green);
+            Grid.SetColumn(text1, 0);
+            Grid.SetRow(text1, 0);
+            this.grid.Children.Add(text1);
+
         }
 
         private void ReturnToMenu(object sender, RoutedEventArgs e) {
