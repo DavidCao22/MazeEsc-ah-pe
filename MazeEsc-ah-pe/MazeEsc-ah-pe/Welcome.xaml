@@ -8,32 +8,4 @@
       d:DesignHeight="300" d:DesignWidth="300"
       Title="Welcome">
 
-    <Grid Margin="10,0,10,10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-
-        <Border Grid.Column="1" Grid.Row="1" Height="35" Padding="5" Background="#E07A30">
-            <Label VerticalAlignment="Center" Foreground="White">Choose Your Character</Label>
-        </Border>
-        <ListBox Grid.Column="1" Grid.Row="2" Name="characterListBox" >
-            <ListBoxItem>Marlin</ListBoxItem>
-            <ListBoxItem>Dory</ListBoxItem>
-        </ListBox>
-
-        <Button Grid.Column="1" Grid.Row="3" Margin="0,10,0,0" Click="StartGame">StartGame</Button>
-
-        <Grid.Background>
-            <ImageBrush ImageSource="assets/welcome2.png"/>
-        </Grid.Background>
-    </Grid>
 </Page>

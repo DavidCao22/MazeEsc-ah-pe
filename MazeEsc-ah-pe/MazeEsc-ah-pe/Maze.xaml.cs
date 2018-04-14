@@ -34,6 +34,7 @@ namespace MazeEsc_ah_pe {
             CreateGrid();
             InsertWalls();
             AddBottomButtons();
+            InstantiateCharacter();
         }
 
         private void CreateGrid() {
@@ -50,8 +51,9 @@ namespace MazeEsc_ah_pe {
             columns.Add(col0);
             // set up grid columns
             for(int i = 1; i < 21; i++) {
-                ColumnDefinition col_i = new ColumnDefinition();
-                col_i.Width = new GridLength(COLUMN_SIZE);
+                ColumnDefinition col_i = new ColumnDefinition() {
+                    Width = new GridLength(COLUMN_SIZE)
+                };
                 columns.Add(col_i);
             }
             columns.Add(col21);
@@ -67,8 +69,9 @@ namespace MazeEsc_ah_pe {
             rows.Add(row0);
             // set up grid rows
             for(int i = 1; i < 21; i++) {
-                RowDefinition row_i = new RowDefinition();
-                row_i.Height = new GridLength(ROW_SIZE);
+                RowDefinition row_i = new RowDefinition() {
+                    Height = new GridLength(ROW_SIZE)
+                };
                 rows.Add(row_i);
             }
             rows.Add(row21);
@@ -108,6 +111,19 @@ namespace MazeEsc_ah_pe {
             Grid.SetColumn(text1, 0);
             Grid.SetRow(text1, 0);
             this.grid.Children.Add(text1);
+
+            Button button = new Button();
+            Grid.SetColumn(button, 2);
+            Grid.SetRow(button, 21);
+            Grid.SetColumnSpan(button, 3);
+            button.Click += this.ReturnToMenu;
+            button.Content = "Return To Menu";
+            button.FontSize = 16;
+            button.Height = 40;
+            this.grid.Children.Add(button);
+        }
+
+        private void InstantiateCharacter() {
 
         }
 
