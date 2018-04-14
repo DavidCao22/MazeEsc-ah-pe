@@ -20,7 +20,8 @@ namespace MazeEsc_ah_pe {
     /// </summary>
     public partial class Maze : Page {
 
-        private const String MAZEFILE = @"C:\src\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets\maze_path.txt";
+        private const String MAZEFILE1 = @"C:\Users\Anthony\Documents\CornHacks\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets";
+        private const String MAZEFILE2 = @"C:\src\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets";
         private const int MARGIN_SIZE = 100;
         private const int COLUMN_SIZE = 40;
         private const int ROW_SIZE = 40;
@@ -79,21 +80,197 @@ namespace MazeEsc_ah_pe {
             this.Content = grid;
         }
 
+        private string wallType(string[] lines, int x, int y)
+        {
+            Boolean up = false, down = false, left = false, right = false;
+            if(y != 0 && lines[y - 1][x] == WALL)
+            {
+                up = true;
+            }
+            if (y != lines.Length - 1 && lines[y + 1][x] == WALL)
+            {
+                down = true;
+            }
+            if (x != 0 && lines[y][x - 1] == WALL)
+            {
+                left = true;
+            }
+            if (x != lines[y].Length - 1 && lines[y][x + 1] == WALL)
+            {
+                right = true;
+            }
+            if (up)
+            {
+                if (right)
+                {
+                    if (down)
+                    {
+                        if (left)
+                        {
+                            return "empty";
+                        }
+                        else
+                        {
+                            return "vertical";
+                        }
+                    }
+                    else
+                    {
+                        if (left)
+                        {
+                            return "horizontal";
+                        }
+                        else
+                        {
+                            return "corner_UR";
+                        }
+                    }
+                }
+                else
+                {
+                    if (down)
+                    {
+                        return "vertical";
+                    }
+                    else
+                    {
+                        if (left)
+                        {
+                            return "corner_UL";
+                        }
+                        else
+                        {
+                            return "vertical";
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (right)
+                {
+                    if (down)
+                    {
+                        if (left)
+                        {
+                            return "horizontal";
+                        }
+                        else
+                        {
+                            return "corner_DR";
+                        }
+                    }
+                    else
+                    {
+                        return "horizontal";
+                    }
+                }
+                else
+                {
+                    if (down)
+                    {
+                        if (left)
+                        {
+                            return "corner_DL";
+                        }
+                        else
+                        {
+                            return "vertical";
+                        }
+                    }
+                    else
+                    {
+                        if (left)
+                        {
+                            return "horizontal";
+                        }
+                        else
+                        {
+                            return "empty";
+                        }
+                    }
+                }
+            }
+        }
+
         private void InsertWalls() {
-            string[] lines = System.IO.File.ReadAllLines(MAZEFILE);
+            string[] lines;
+            string filePath;
+            try
+            {
+                lines = System.IO.File.ReadAllLines(MAZEFILE2 + @"\maze_path.txt");
+                filePath = MAZEFILE2;
+            }
+            catch (DirectoryNotFoundException){
+                lines = System.IO.File.ReadAllLines(MAZEFILE1 + @"\maze_path.txt");
+                filePath = MAZEFILE1;
+            }
             for(int i = 0; i < lines.Length; i++) {
                 string line = lines[i];
                 for(int j = 0; j < line.Length; j++) {
-                    switch(line[j]) {
+                    TextBlock backgroundShape = new TextBlock();
+                    ImageBrush myBrush = new ImageBrush();
+                    Image image = new Image();
+                    switch (line[j]) {
                         case WALL:
-                            Console.WriteLine("wall");
+                            switch(wallType(lines, i, j))
+                            {
+                                case "vertical":
+                                    BitmapImage bi = new BitmapImage();
+                                    bi.BeginInit();
+                                    bi.UriSource = new Uri(filePath + @"\wall_straight.png");
+                                    bi.Rotation = Rotation.Rotate90;
+                                    bi.EndInit();
+                                    image.Source = bi;
+                                    break;
+                                case "horizontal":
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_straight.png"));
+                                    break;
+                                case "corner_UR":
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_corner.png"));
+                                    break;
+                                case "corner_UL":
+                                    BitmapImage bi1 = new BitmapImage();
+                                    bi1.BeginInit();
+                                    bi1.UriSource = new Uri(filePath + @"\wall_corner.png");
+                                    bi1.Rotation = Rotation.Rotate270;
+                                    bi1.EndInit();
+                                    image.Source = bi1;
+                                    break;
+                                case "corner_DR":
+                                    BitmapImage bi2 = new BitmapImage();
+                                    bi2.BeginInit();
+                                    bi2.UriSource = new Uri(filePath + @"\wall_corner.png");
+                                    bi2.Rotation = Rotation.Rotate90;
+                                    bi2.EndInit();
+                                    image.Source = bi2;
+                                    break;
+                                case "corner_DL":
+                                    BitmapImage bi3 = new BitmapImage();
+                                    bi3.BeginInit();
+                                    bi3.UriSource = new Uri(filePath + @"\wall_corner.png");
+                                    bi3.Rotation = Rotation.Rotate180;
+                                    bi3.EndInit();
+                                    image.Source = bi3;
+                                    break;
+                                case "empty":
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         case EMPTY:
-                            Console.WriteLine("empty");
+                            image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
                             break;
                         default:
                             break;
                     }
+                    myBrush.ImageSource = image.Source;
+                    backgroundShape.Background = myBrush;
+                    Grid.SetColumn(backgroundShape, j + 1);
+                    Grid.SetRow(backgroundShape, i + 1);
+                    this.grid.Children.Add(backgroundShape);
                 }
             }
         }
