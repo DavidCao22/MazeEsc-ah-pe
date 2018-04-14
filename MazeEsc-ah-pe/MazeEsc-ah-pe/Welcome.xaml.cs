@@ -25,6 +25,7 @@ namespace MazeEsc_ah_pe {
         private readonly ArrayList CHARACTERS = new ArrayList{"Marlin", "Dory"};
 
         private Grid grid;
+        private String selectedCharacter;
 
         public Welcome() {
             InitializeComponent();
@@ -85,8 +86,7 @@ namespace MazeEsc_ah_pe {
                 };
                 list.Items.Add(item_i);
             }
-            Binding binding = new Binding("SelectedCharacter");
-            list.SetBinding(ListBox.SelectedItemProperty, binding);
+            list.SelectionChanged += CharacterSelect;
             this.grid.Children.Add(border);
             this.grid.Children.Add(list);
         }
@@ -113,8 +113,14 @@ namespace MazeEsc_ah_pe {
             this.grid.Background = brush;
         }
 
+        private void CharacterSelect(object sender, RoutedEventArgs e) {
+            ListBox listbox = (ListBox)sender;
+            ListBoxItem item = (ListBoxItem)listbox.SelectedItem;
+            this.selectedCharacter = (String)item.Content;
+        }
+
         private void StartGame(object sender, RoutedEventArgs e) {
-            Maze mazePage = new Maze();
+            Maze mazePage = new Maze(this.selectedCharacter);
             this.NavigationService.Navigate(mazePage);
         }
     }

@@ -29,13 +29,24 @@ namespace MazeEsc_ah_pe {
         private const char EMPTY = 'o';
 
         private Grid grid;
+        private String filePath;
 
         public Maze() {
             InitializeComponent();
             CreateGrid();
             InsertWalls();
             AddBottomButtons();
-            InstantiateCharacter();
+            InstantiateCharacter("marlin", 19, 19);
+            InstantiateCharacter("shark", 19, 20);
+        }
+
+        public Maze(String character) {
+            InitializeComponent();
+            CreateGrid();
+            InsertWalls();
+            AddBottomButtons();
+            InstantiateCharacter(character.ToLower(), 19, 19);
+            InstantiateCharacter("shark", 19, 20);
         }
 
         private void CreateGrid() {
@@ -83,8 +94,9 @@ namespace MazeEsc_ah_pe {
             this.Content = grid;
         }
 
-        private string wallType(string[] lines, int x, int y)
+        private string WallType(string[] lines, int x, int y)
         {
+            //TODO switch statements for clarity
             Boolean up = false, down = false, left = false, right = false;
             if(y != 0 && lines[y - 1][x] == WALL)
             {
@@ -198,15 +210,14 @@ namespace MazeEsc_ah_pe {
 
         private void InsertWalls() {
             string[] lines;
-            string filePath;
             try
             {
                 lines = System.IO.File.ReadAllLines(MAZEFILE2 + @"\maze_path.txt");
-                filePath = MAZEFILE2;
+                this.filePath = MAZEFILE2;
             }
             catch (DirectoryNotFoundException){
                 lines = System.IO.File.ReadAllLines(MAZEFILE1 + @"\maze_path.txt");
-                filePath = MAZEFILE1;
+                this.filePath = MAZEFILE1;
             }
             for(int i = 0; i < lines.Length; i++) {
                 string line = lines[i];
@@ -216,26 +227,26 @@ namespace MazeEsc_ah_pe {
                     Image image = new Image();
                     switch (line[j]) {
                         case WALL:
-                            switch(wallType(lines, i, j))
+                            switch(WallType(lines, i, j))
                             {
                                 case "vertical":
                                     BitmapImage bi = new BitmapImage();
                                     bi.BeginInit();
-                                    bi.UriSource = new Uri(filePath + @"\wall_straight.png");
+                                    bi.UriSource = new Uri(this.filePath + @"\wall_straight.png");
                                     bi.Rotation = Rotation.Rotate90;
                                     bi.EndInit();
                                     image.Source = bi;
                                     break;
                                 case "horizontal":
-                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_straight.png"));
+                                    image.Source = new BitmapImage(new Uri(this.filePath + @"\wall_straight.png"));
                                     break;
                                 case "corner_UR":
-                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_corner.png"));
+                                    image.Source = new BitmapImage(new Uri(this.filePath + @"\wall_corner.png"));
                                     break;
                                 case "corner_UL":
                                     BitmapImage bi1 = new BitmapImage();
                                     bi1.BeginInit();
-                                    bi1.UriSource = new Uri(filePath + @"\wall_corner.png");
+                                    bi1.UriSource = new Uri(this.filePath + @"\wall_corner.png");
                                     bi1.Rotation = Rotation.Rotate270;
                                     bi1.EndInit();
                                     image.Source = bi1;
@@ -243,7 +254,7 @@ namespace MazeEsc_ah_pe {
                                 case "corner_DR":
                                     BitmapImage bi2 = new BitmapImage();
                                     bi2.BeginInit();
-                                    bi2.UriSource = new Uri(filePath + @"\wall_corner.png");
+                                    bi2.UriSource = new Uri(this.filePath + @"\wall_corner.png");
                                     bi2.Rotation = Rotation.Rotate90;
                                     bi2.EndInit();
                                     image.Source = bi2;
@@ -251,20 +262,20 @@ namespace MazeEsc_ah_pe {
                                 case "corner_DL":
                                     BitmapImage bi3 = new BitmapImage();
                                     bi3.BeginInit();
-                                    bi3.UriSource = new Uri(filePath + @"\wall_corner.png");
+                                    bi3.UriSource = new Uri(this.filePath + @"\wall_corner.png");
                                     bi3.Rotation = Rotation.Rotate180;
                                     bi3.EndInit();
                                     image.Source = bi3;
                                     break;
                                 case "empty":
-                                    image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
+                                    image.Source = new BitmapImage(new Uri(this.filePath + @"\empty.png"));
                                     break;
                                 default:
                                     break;
                             }
                             break;
                         case EMPTY:
-                            image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
+                            image.Source = new BitmapImage(new Uri(this.filePath + @"\empty.png"));
                             break;
                         default:
                             break;
@@ -279,19 +290,9 @@ namespace MazeEsc_ah_pe {
         }
 
         private void AddBottomButtons() {
-            RowDefinition row = this.grid.RowDefinitions[21];
-            ColumnDefinition col = this.grid.ColumnDefinitions[3];
-
-            TextBlock text1 = new TextBlock();
-            text1.Text = "Author Name";
-            text1.Background = new SolidColorBrush(Colors.Green);
-            Grid.SetColumn(text1, 0);
-            Grid.SetRow(text1, 0);
-            this.grid.Children.Add(text1);
-
             Button button = new Button();
             Grid.SetColumn(button, 2);
-            Grid.SetRow(button, 21);
+            Grid.SetRow(button, 0);
             Grid.SetColumnSpan(button, 3);
             button.Click += this.ReturnToMenu;
             button.Content = "Return To Menu";
@@ -300,8 +301,20 @@ namespace MazeEsc_ah_pe {
             this.grid.Children.Add(button);
         }
 
-        private void InstantiateCharacter() {
-
+        private void InstantiateCharacter(String fish, int col, int row) {
+            TextBlock backgroundShape = new TextBlock();
+            ImageBrush myBrush = new ImageBrush();
+            Image image = new Image();
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(this.filePath + "\\" + fish + ".png");
+            bi.EndInit();
+            image.Source = bi;
+            myBrush.ImageSource = image.Source;
+            backgroundShape.Background = myBrush;
+            Grid.SetColumn(backgroundShape, col);
+            Grid.SetRow(backgroundShape, row);
+            this.grid.Children.Add(backgroundShape);
         }
 
         private void ReturnToMenu(object sender, RoutedEventArgs e) {
