@@ -26,10 +26,8 @@
             <Label VerticalAlignment="Center" Foreground="White">Choose Your Character</Label>
         </Border>
         <ListBox Grid.Column="1" Grid.Row="2" Name="characterListBox" >
-            <ListBoxItem>Nemo</ListBoxItem>
             <ListBoxItem>Marlin</ListBoxItem>
-            <!-- <ListBoxItem>Dory</ListBoxItem> -->
-            <!-- <ListBoxItem>Crush</ListBoxItem> -->
+            <ListBoxItem>Dory</ListBoxItem>
         </ListBox>
 
         <Button Grid.Column="1" Grid.Row="3" Margin="0,10,0,0" Click="StartGame">StartGame</Button>

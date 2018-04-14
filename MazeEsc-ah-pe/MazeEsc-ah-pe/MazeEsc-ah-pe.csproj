@@ -115,6 +115,19 @@
   <ItemGroup>
     <Resource Include="assets\welcome2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\empty.png" />
+    <Resource Include="assets\maze_path.txt" />
+    <Resource Include="assets\wall_column.png" />
+    <Resource Include="assets\wall_corner.png" />
+    <Resource Include="assets\wall_straight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\dory.png" />
+    <Resource Include="assets\goggles.png" />
+    <Resource Include="assets\marlin.png" />
+    <Resource Include="assets\shark.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
