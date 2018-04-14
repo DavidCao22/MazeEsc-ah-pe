@@ -107,18 +107,18 @@ namespace MazeEsc_ah_pe {
                     {
                         if (left)
                         {
-                            return "empty";
+                            return "four";
                         }
                         else
                         {
-                            return "vertical";
+                            return "three_L";
                         }
                     }
                     else
                     {
                         if (left)
                         {
-                            return "horizontal";
+                            return "three_D";
                         }
                         else
                         {
@@ -130,7 +130,14 @@ namespace MazeEsc_ah_pe {
                 {
                     if (down)
                     {
-                        return "vertical";
+                        if (left)
+                        {
+                            return "three_R";
+                        }
+                        else
+                        {
+                            return "vertical";
+                        }
                     }
                     else
                     {
@@ -153,7 +160,7 @@ namespace MazeEsc_ah_pe {
                     {
                         if (left)
                         {
-                            return "horizontal";
+                            return "three_U";
                         }
                         else
                         {
@@ -213,9 +220,9 @@ namespace MazeEsc_ah_pe {
                     Image image = new Image();
                     switch (line[j]) {
                         case WALL:
-                            switch(wallType(lines, i, j))
+                            switch(wallType(lines, j, i))
                             {
-                                case "vertical":
+                                case "horizontal":
                                     BitmapImage bi = new BitmapImage();
                                     bi.BeginInit();
                                     bi.UriSource = new Uri(filePath + @"\wall_straight.png");
@@ -223,7 +230,7 @@ namespace MazeEsc_ah_pe {
                                     bi.EndInit();
                                     image.Source = bi;
                                     break;
-                                case "horizontal":
+                                case "vertical":
                                     image.Source = new BitmapImage(new Uri(filePath + @"\wall_straight.png"));
                                     break;
                                 case "corner_UR":
@@ -255,6 +262,36 @@ namespace MazeEsc_ah_pe {
                                     break;
                                 case "empty":
                                     image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
+                                    break;
+                                case "three_U":
+                                    BitmapImage bi4 = new BitmapImage();
+                                    bi4.BeginInit();
+                                    bi4.UriSource = new Uri(filePath + @"\wall_split.png");
+                                    bi4.Rotation = Rotation.Rotate90;
+                                    bi4.EndInit();
+                                    image.Source = bi4;
+                                    break;
+                                case "three_D":
+                                    BitmapImage bi5 = new BitmapImage();
+                                    bi5.BeginInit();
+                                    bi5.UriSource = new Uri(filePath + @"\wall_split.png");
+                                    bi5.Rotation = Rotation.Rotate270;
+                                    bi5.EndInit();
+                                    image.Source = bi5;
+                                    break;
+                                case "three_L":
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_split.png"));
+                                    break;
+                                case "three_R":
+                                    BitmapImage bi6 = new BitmapImage();
+                                    bi6.BeginInit();
+                                    bi6.UriSource = new Uri(filePath + @"\wall_split.png");
+                                    bi6.Rotation = Rotation.Rotate180;
+                                    bi6.EndInit();
+                                    image.Source = bi6;
+                                    break;
+                                case "four":
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_four.png"));
                                     break;
                                 default:
                                     break;
