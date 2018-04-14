@@ -23,8 +23,8 @@ namespace MazeEsc_ah_pe {
         }
 
         private void StartGame(object sender, RoutedEventArgs e) {
-            WakeUp wakeUpPage = new WakeUp();
-            this.NavigationService.Navigate(wakeUpPage);
+            Maze mazePage = new Maze();
+            this.NavigationService.Navigate(mazePage);
         }
     }
 }

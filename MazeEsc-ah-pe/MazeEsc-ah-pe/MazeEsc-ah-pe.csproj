@@ -55,8 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="WakeUp.xaml.cs">
-      <DependentUpon>WakeUp.xaml</DependentUpon>
+    <Compile Include="Maze.xaml.cs">
+      <DependentUpon>Maze.xaml</DependentUpon>
     </Compile>
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
@@ -73,7 +73,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="WakeUp.xaml">
+    <Page Include="Maze.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -111,6 +111,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="assets\welcome.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\welcome2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
