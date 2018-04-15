@@ -104,9 +104,21 @@ namespace MazeEsc_ah_pe {
         }
 
         private void SetBackground() {
-            Image image = new Image() {
-                Source = new BitmapImage(new Uri(WELCOME_BACKGROUND_LOCATION))
-            };
+            Image image;
+            try
+            {
+                image = new Image()
+                {
+                    Source = new BitmapImage(new Uri(WELCOME_BACKGROUND_LOCATION))
+                };
+            }
+            catch (DirectoryNotFoundException)
+            {
+                image = new Image()
+                {
+                    Source = new BitmapImage(new Uri(@"C:\Users\Anthony\Documents\CornHacks\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets\welcome2.png"))
+                };
+            }
             ImageBrush brush = new ImageBrush() {
                 ImageSource = image.Source
             };

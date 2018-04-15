@@ -35,9 +35,39 @@ namespace MazeEsc_ah_pe {
         private String filePath;
         private int[] fishLocation = new int[2] { 19, 19 };
         private int[] sharkLocation = new int[2] { 19, 20 };
+        private TextBlock info;
+        private int[] gogglesLocation = {2,2};
 
         private TextBlock shark;
         private TextBlock fish;
+        public Maze() {
+            InitializeComponent();
+            CreateGrid();
+            String[] textGrid = InsertWalls();
+            AddBottomButtons();
+            InstantiateCharacter("marlin", 19, 19);
+            InstantiateCharacter("shark", 19, 20);
+            TextBlock backgroundShape = new TextBlock();
+            ImageBrush myBrush = new ImageBrush();
+            Image image = new Image();
+            BitmapImage bi = new BitmapImage();
+            bi.BeginInit();
+            bi.UriSource = new Uri(this.filePath + @"\goggles.png");
+            bi.EndInit();
+            image.Source = bi;
+            myBrush.ImageSource = image.Source;
+            backgroundShape.Background = myBrush;
+            int i = 0, j = 0;
+            Random rnd = new Random();
+            while (textGrid[i][j] != 'o')
+            {
+                i = rnd.Next(1, 20);
+                j = rnd.Next(1, 20);
+            }
+            Grid.SetColumn(backgroundShape, i + 1);
+            Grid.SetRow(backgroundShape, j + 1);
+            this.grid.Children.Add(backgroundShape);
+        }
 
         public Maze(String character) {
             InitializeComponent();
@@ -215,7 +245,7 @@ namespace MazeEsc_ah_pe {
             }
         }
 
-        private void InsertWalls() {
+        private String[] InsertWalls() {
             string[] lines;
             try
             {
@@ -324,6 +354,7 @@ namespace MazeEsc_ah_pe {
                     this.grid.Children.Add(backgroundShape);
                 }
             }
+            return lines;
         }
 
         private void AddBottomButtons() {
@@ -336,6 +367,14 @@ namespace MazeEsc_ah_pe {
             button.FontSize = 16;
             button.Height = 40;
             this.grid.Children.Add(button);
+            info = new TextBlock();
+            Grid.SetColumn(info, 6);
+            Grid.SetRow(info, 0);
+            Grid.SetColumnSpan(info, 10);
+            info.Text = "Find the Goggles, Then Escape";
+            info.FontSize = 20;
+            info.Height = 40;
+            this.grid.Children.Add(info);
         }
 
         private void InstantiateCharacter(String fish, int[] location) {
@@ -357,6 +396,21 @@ namespace MazeEsc_ah_pe {
             } else {
                 this.fish = backgroundShape;
             }
+        }
+
+        private Boolean Eaten()
+        {
+            if(fishLocation[0] == sharkLocation[0] && fishLocation[1] == sharkLocation[1])
+            {
+                LoseGame();
+                return true;
+            }
+            return false;
+        }
+
+        private void LoseGame()
+        {
+            info.Text = "Sorry, The Shark Ate You";
         }
 
         private void AddCharacterMovement() {
