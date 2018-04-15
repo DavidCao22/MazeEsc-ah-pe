@@ -418,13 +418,13 @@ namespace MazeEsc_ah_pe {
         }
 
         private new void KeyUp(object sender, KeyEventArgs e) {
-            if(Keyboard.IsKeyUp(Key.W)) {
+            if(e.Key == Key.W) {
                 MoveUpDown(Animal.Fish, Direction.Up);
-            } else if(Keyboard.IsKeyUp(Key.S)){
+            } else if(e.Key == Key.S){
                 MoveUpDown(Animal.Fish, Direction.Down);
-            } else if(Keyboard.IsKeyUp(Key.A)){
+            } else if(e.Key == Key.A){
                 MoveLeftRight(Animal.Fish, Direction.Left);
-            } else if(Keyboard.IsKeyUp(Key.D)){
+            } else if(e.Key == Key.D){
                 MoveLeftRight(Animal.Fish, Direction.Right);
             }
             Grid.SetColumn(this.fish, this.fishLocation[0]);
