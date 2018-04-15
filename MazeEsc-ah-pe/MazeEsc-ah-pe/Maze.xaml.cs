@@ -34,12 +34,16 @@ namespace MazeEsc_ah_pe {
         public enum Difficulty { Easy, Medium, Hard };
 
         private Grid grid;
+        private Boolean[,] mazeWalls;
         private String filePath;
         private int[] fishLocation = new int[2] { 19, 19 };
-        private int[] sharkLocation = new int[2] { 19, 20 };
+        private int[] sharkLocation = new int[2] { 4, 4 };
         private TextBlock info;
         private int[] gogglesLocation = {2,2};
         private Difficulty gameDifficulty;
+        private int sharkMovementInterval;
+        private Boolean sharkKnowsWalls = false;
+        private Boolean sharkKnowsFishLocation = false;
 
         private TextBlock shark;
         private TextBlock fish;
@@ -53,8 +57,8 @@ namespace MazeEsc_ah_pe {
             InstantiateCharacter(character.ToLower(), fishLocation);
             InstantiateCharacter("shark", sharkLocation);
             AddCharacterMovement();
-            AddSharkMovement();
             TrainShark();
+            AddSharkMovement();
         }
 
         private void CreateGrid() {
@@ -234,6 +238,7 @@ namespace MazeEsc_ah_pe {
                 lines = System.IO.File.ReadAllLines(MAZEFILE1 + @"\maze_path.txt");
                 this.filePath = MAZEFILE1;
             }
+            this.mazeWalls = new Boolean[lines.Length, lines[0].Length];
             for(int i = 0; i < lines.Length; i++) {
                 string line = lines[i];
                 for(int j = 0; j < line.Length; j++) {
@@ -242,6 +247,7 @@ namespace MazeEsc_ah_pe {
                     Image image = new Image();
                     switch (line[j]) {
                         case WALL:
+                            mazeWalls[j, i] = true;
                             switch(WallType(lines, j, i))
                             {
                                 case "horizontal":
@@ -320,6 +326,7 @@ namespace MazeEsc_ah_pe {
                             }
                             break;
                         case EMPTY:
+                            mazeWalls[j, i] = false;
                             image.Source = new BitmapImage(new Uri(this.filePath + @"\empty.png"));
                             break;
                         default:
@@ -396,7 +403,7 @@ namespace MazeEsc_ah_pe {
         }
 
         private void AddSharkMovement() {
-            Timer timer = new Timer(2000);
+            Timer timer = new Timer(sharkMovementInterval);
             timer.Elapsed += new ElapsedEventHandler(MoveShark);
             timer.Enabled = true;
         }
@@ -445,26 +452,64 @@ namespace MazeEsc_ah_pe {
         }
 
         private void MoveShark(object source, ElapsedEventArgs e) {
-            int rand = new Random().Next(3);
             Direction dir = Direction.Up;
-            switch(rand) {
-                case 0:
-                    dir = Direction.Up;
-                    break;
-                case 1:
-                    dir = Direction.Right;
-                    break;
-                case 2:
-                    dir = Direction.Down;
-                    break;
-                case 3:
-                    dir = Direction.Left;
-                    break;
-                default:
-                    break;
+            Random rand = new Random();
+            if(this.sharkKnowsWalls && this.sharkKnowsFishLocation) {
+                Boolean unpicked = true;
+                while(unpicked) {
+                    //TODO IMPLEMENT ME
+                }
+            } else if(this.sharkKnowsWalls) {
+                Boolean unpicked = true;
+                Boolean wall = true;
+                while(unpicked) {
+                    dir = (Direction)rand.Next(4);
+                    switch(dir) {
+                        case Direction.Up:
+                            if(this.sharkLocation[1] > 1) {
+                                wall = this.mazeWalls[this.sharkLocation[0] - 1, this.sharkLocation[1] - 2];
+                                if(!wall) {
+                                    dir = Direction.Up;
+                                    unpicked = false;
+                                }
+                            }
+                            break;
+                        case Direction.Right:
+                            if(this.sharkLocation[0] < 20) {
+                                wall = this.mazeWalls[this.sharkLocation[0], this.sharkLocation[1] - 1];
+                                if(!wall) {
+                                    dir = Direction.Right;
+                                    unpicked = false;
+                                }
+                            }
+                            break;
+                        case Direction.Down:
+                            if(this.sharkLocation[1] < 20) {
+                                wall = this.mazeWalls[this.sharkLocation[0] - 1, this.sharkLocation[1]];
+                                if(!wall) {
+                                    dir = Direction.Down;
+                                    unpicked = false;
+                                }
+                            }
+                            break;
+                        case Direction.Left:
+                            if (this.sharkLocation[0] > 1) {
+                                wall = this.mazeWalls[this.sharkLocation[0] - 2, this.sharkLocation[1] - 1];
+                                if(!wall) {
+                                    dir = Direction.Left;
+                                    unpicked = false;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } else {
+                dir = (Direction)rand.Next(3);
             }
             MoveAnimal(Animal.Shark, dir);
-            this.Dispatcher.Invoke( () => {
+            this.Dispatcher.Invoke(() => {
                 Grid.SetColumn(this.shark, this.sharkLocation[0]);
                 Grid.SetRow(this.shark, this.sharkLocation[1]);
             });
@@ -480,16 +525,19 @@ namespace MazeEsc_ah_pe {
             }
         }
 
-        public static void TrainEasyShark() {
-            Console.WriteLine("TRAIN EASY");
+        public void TrainEasyShark() {
+            this.sharkMovementInterval = 1750;
         }
 
-        public static void TrainMediumShark() {
-            Console.WriteLine("TRAIN MEDIUM");
+        public void TrainMediumShark() {
+            this.sharkMovementInterval = 1250;
+            this.sharkKnowsWalls = true;
         }
 
-        public static void TrainHardShark() {
-            Console.WriteLine("TRAIN HARD");
+        public void TrainHardShark() {
+            this.sharkMovementInterval = 750;
+            this.sharkKnowsWalls = true;
+            this.sharkKnowsFishLocation = true;
         }
     }
 }
