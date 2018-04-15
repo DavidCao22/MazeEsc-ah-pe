@@ -1,4 +1,4 @@
-﻿<Page x:Class="MazeEsc_ah_pe.WakeUp"
+﻿<Page x:Class="MazeEsc_ah_pe.Maze"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,9 +6,6 @@
       xmlns:local="clr-namespace:MazeEsc_ah_pe"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
-      Title="Wake Up">
+      Title="Maze">
 
-    <Grid>
-        
-    </Grid>
 </Page>
