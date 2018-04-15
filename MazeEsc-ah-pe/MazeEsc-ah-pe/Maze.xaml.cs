@@ -28,11 +28,18 @@ namespace MazeEsc_ah_pe {
         private const char WALL = 'x';
         private const char EMPTY = 'o';
 
+        private enum Direction { Up, Down, Left, Right };
+        private enum Animal { Fish, Shark };
+
         private Grid grid;
         private String filePath;
+        private int[] fishLocation = new int[2] { 19, 19 };
+        private int[] sharkLocation = new int[2] { 19, 20 };
         private TextBlock info;
         private int[] gogglesLocation = {2,2};
 
+        private TextBlock shark;
+        private TextBlock fish;
         public Maze() {
             InitializeComponent();
             CreateGrid();
@@ -67,8 +74,9 @@ namespace MazeEsc_ah_pe {
             CreateGrid();
             InsertWalls();
             AddBottomButtons();
-            InstantiateCharacter(character.ToLower(), 19, 19);
-            InstantiateCharacter("shark", 19, 20);
+            InstantiateCharacter(character.ToLower(), fishLocation);
+            InstantiateCharacter("shark", sharkLocation);
+            AddCharacterMovement();
         }
 
         private void CreateGrid() {
@@ -369,7 +377,7 @@ namespace MazeEsc_ah_pe {
             this.grid.Children.Add(info);
         }
 
-        private void InstantiateCharacter(String fish, int col, int row) {
+        private void InstantiateCharacter(String fish, int[] location) {
             TextBlock backgroundShape = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
@@ -380,9 +388,14 @@ namespace MazeEsc_ah_pe {
             image.Source = bi;
             myBrush.ImageSource = image.Source;
             backgroundShape.Background = myBrush;
-            Grid.SetColumn(backgroundShape, col);
-            Grid.SetRow(backgroundShape, row);
+            Grid.SetColumn(backgroundShape, location[0]);
+            Grid.SetRow(backgroundShape, location[1]);
             this.grid.Children.Add(backgroundShape);
+            if(fish == "shark") {
+                this.shark = backgroundShape;
+            } else {
+                this.fish = backgroundShape;
+            }
         }
 
         private Boolean Eaten()
@@ -398,6 +411,56 @@ namespace MazeEsc_ah_pe {
         private void LoseGame()
         {
             info.Text = "Sorry, The Shark Ate You";
+        }
+
+        private void AddCharacterMovement() {
+            EventManager.RegisterClassHandler(typeof(Control), Keyboard.KeyUpEvent, new KeyEventHandler(KeyUp), true);
+        }
+
+        private new void KeyUp(object sender, KeyEventArgs e) {
+            if(Keyboard.IsKeyUp(Key.W)) {
+                MoveUpDown(Animal.Fish, Direction.Up);
+            } else if(Keyboard.IsKeyUp(Key.S)){
+                MoveUpDown(Animal.Fish, Direction.Down);
+            } else if(Keyboard.IsKeyUp(Key.A)){
+                MoveLeftRight(Animal.Fish, Direction.Left);
+            } else if(Keyboard.IsKeyUp(Key.D)){
+                MoveLeftRight(Animal.Fish, Direction.Right);
+            }
+            Grid.SetColumn(this.fish, this.fishLocation[0]);
+            Grid.SetRow(this.fish, this.fishLocation[1]);
+        }
+
+        private void MoveUpDown(Animal animal, Direction direction) {
+            if(animal == Animal.Fish) {
+                if((direction == Direction.Up) && (this.fishLocation[1] != 1)) {
+                    this.fishLocation[1]--;
+                } else if((direction == Direction.Down) && (this.fishLocation[1] != 20)) {
+                    this.fishLocation[1]++;
+                }
+            } else {
+                if((direction == Direction.Up) && (this.sharkLocation[1] != 1)) {
+                    this.sharkLocation[1]--;
+                } else if((direction == Direction.Down) && (this.sharkLocation[1] != 20)) {
+                    this.sharkLocation[1]++;
+                }
+            }
+        }
+
+        private void MoveLeftRight(Animal animal, Direction direction) {
+            if(animal == Animal.Fish) {
+                if((direction == Direction.Left) && (this.fishLocation[0] != 1)) {
+                    this.fishLocation[0]--;
+                } else if((direction == Direction.Right) && (this.fishLocation[0] != 20)) {
+                    this.fishLocation[0]++;
+                }
+            } else {
+                if((direction == Direction.Left) && (this.sharkLocation[0] != 1)) {
+                    this.sharkLocation[0]--;
+                } else if((direction == Direction.Right) && (this.sharkLocation[0] != 20)) {
+                    this.sharkLocation[0]++;
+                }
+            }
         }
 
         private void ReturnToMenu(object sender, RoutedEventArgs e) {
