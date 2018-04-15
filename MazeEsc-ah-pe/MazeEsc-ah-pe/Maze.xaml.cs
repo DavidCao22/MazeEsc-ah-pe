@@ -60,7 +60,7 @@ namespace MazeEsc_ah_pe {
             goggles = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
-            BitmapImage bi = new BitmapImage(new Uri(MAZEFILE1 + @"\goggles.png"));
+            BitmapImage bi = new BitmapImage(new Uri(filePath + @"\goggles.png"));
             image.Source = bi;
             myBrush.ImageSource = image.Source;
             goggles.Background = myBrush;
@@ -469,7 +469,7 @@ namespace MazeEsc_ah_pe {
                 gogglesLocation[0] = 25;
                 ImageBrush myBrush = new ImageBrush();
                 Image image = new Image();
-                image.Source = new BitmapImage(new Uri(MAZEFILE1 + @"\empty.png"));
+                image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
                 myBrush.ImageSource = image.Source;
                 goggles.Background = myBrush;
                 info.Text = "Now Just Escape!!";
