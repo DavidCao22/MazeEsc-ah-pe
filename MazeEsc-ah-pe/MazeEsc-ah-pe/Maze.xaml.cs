@@ -442,19 +442,19 @@ namespace MazeEsc_ah_pe {
             {
                 if (e.Key == Key.W)
                 {
-                    MoveUpDown(Animal.Fish, Direction.Up);
+                    MoveAnimal(Animal.Fish, Direction.Up);
                 }
                 else if (e.Key == Key.S)
                 {
-                    MoveUpDown(Animal.Fish, Direction.Down);
+                    MoveAnimal(Animal.Fish, Direction.Down);
                 }
                 else if (e.Key == Key.A)
                 {
-                    MoveLeftRight(Animal.Fish, Direction.Left);
+                    MoveAnimal(Animal.Fish, Direction.Left);
                 }
                 else if (e.Key == Key.D)
                 {
-                    MoveLeftRight(Animal.Fish, Direction.Right);
+                    MoveAnimal(Animal.Fish, Direction.Right);
                 }
                 if (Eaten()) { WinGame(false); }
                 Grid.SetColumn(this.fish, this.fishLocation[0]);
