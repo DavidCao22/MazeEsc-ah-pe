@@ -61,21 +61,21 @@ namespace MazeEsc_ah_pe {
             goggles = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
-            BitmapImage bi = new BitmapImage(new Uri(MAZEFILE1 + @"\goggles.png"));
+            BitmapImage bi = new BitmapImage(new Uri(filePath + @"\goggles.png"));
             image.Source = bi;
             myBrush.ImageSource = image.Source;
             goggles.Background = myBrush;
-            int i = 0, j = 0;
+            int i = 6, j = 3;
             Random rnd = new Random();
-            while (textGrid[i][j] == 'x')
+            while (textGrid[j - 1][i - 1] == 'x')
             {
                 i = rnd.Next(1, 20);
                 j = rnd.Next(1, 20);
             }
             gogglesLocation[0] = i;
             gogglesLocation[1] = j;
-            Grid.SetColumn(goggles, i + 1);
-            Grid.SetRow(goggles, j + 1);
+            Grid.SetColumn(goggles, j);
+            Grid.SetRow(goggles, i);
             this.grid.Children.Add(goggles);
             InstantiateCharacter(character.ToLower(), fishLocation);
             InstantiateCharacter("shark", sharkLocation);
@@ -465,12 +465,12 @@ namespace MazeEsc_ah_pe {
 
         private void CheckGoggles()
         {
-            if (gogglesLocation[0] + 1 == fishLocation[0] && fishLocation[1] == gogglesLocation[1] + 1)
+            if (gogglesLocation[1] == fishLocation[0] && fishLocation[1] == gogglesLocation[0])
             {
                 gogglesLocation[0] = 25;
                 ImageBrush myBrush = new ImageBrush();
                 Image image = new Image();
-                image.Source = new BitmapImage(new Uri(MAZEFILE1 + @"\empty.png"));
+                image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
                 myBrush.ImageSource = image.Source;
                 goggles.Background = myBrush;
                 info.Text = "Now Just Escape!!";
@@ -644,9 +644,9 @@ namespace MazeEsc_ah_pe {
             } else {
                 dir = (Direction)rand.Next(3);
             }
-            MoveAnimal(Animal.Shark, dir);
-            if(Eaten()) { WinGame(false); }
-            this.Dispatcher.Invoke( () => {
+            if (canMove) { MoveAnimal(Animal.Shark, dir); }
+            this.Dispatcher.Invoke(() => {
+                if (Eaten()) { WinGame(false); }
                 Grid.SetColumn(this.shark, this.sharkLocation[0]);
                 Grid.SetRow(this.shark, this.sharkLocation[1]);
             });
