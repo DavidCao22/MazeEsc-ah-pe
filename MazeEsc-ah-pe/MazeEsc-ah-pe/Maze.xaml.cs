@@ -45,8 +45,8 @@ namespace MazeEsc_ah_pe {
             CreateGrid();
             String[] textGrid = InsertWalls();
             AddBottomButtons();
-            InstantiateCharacter("marlin", 19, 19);
-            InstantiateCharacter("shark", 19, 20);
+            InstantiateCharacter("marlin", fishLocation);
+            InstantiateCharacter("shark", sharkLocation);
             TextBlock backgroundShape = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
