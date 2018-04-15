@@ -573,8 +573,9 @@ namespace MazeEsc_ah_pe {
             } else {
                 dir = (Direction)rand.Next(3);
             }
-            MoveAnimal(Animal.Shark, dir);
+            if (canMove) { MoveAnimal(Animal.Shark, dir); }
             this.Dispatcher.Invoke(() => {
+                if (Eaten()) { WinGame(false); }
                 Grid.SetColumn(this.shark, this.sharkLocation[0]);
                 Grid.SetRow(this.shark, this.sharkLocation[1]);
             });
