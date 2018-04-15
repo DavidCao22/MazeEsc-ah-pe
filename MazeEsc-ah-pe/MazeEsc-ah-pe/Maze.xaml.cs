@@ -36,24 +36,50 @@ namespace MazeEsc_ah_pe {
         private int[] fishLocation = new int[2] { 19, 19 };
         private int[] sharkLocation = new int[2] { 19, 20 };
         private TextBlock info;
-        private int[] gogglesLocation = {2,2};
+        private int[] gogglesLocation = {8,10};
 
         private TextBlock shark;
         private TextBlock fish;
+        private String[] textGrid;
         public Maze() {
             InitializeComponent();
             CreateGrid();
-            String[] textGrid = InsertWalls();
+            textGrid = InsertWalls();
             AddBottomButtons();
             InstantiateCharacter("marlin", fishLocation);
             InstantiateCharacter("shark", sharkLocation);
             TextBlock backgroundShape = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri(this.filePath + @"\goggles.png");
-            bi.EndInit();
+            BitmapImage bi = new BitmapImage(new Uri(MAZEFILE1 + @"\goggles.png"));
+            image.Source = bi;
+            myBrush.ImageSource = image.Source;
+            backgroundShape.Background = myBrush;
+            int i = 0, j = 0;
+            Random rnd = new Random();
+            while (textGrid[i][j] != 'o')
+            {
+                i = rnd.Next(1, 20);
+                j = rnd.Next(1, 20);
+            }
+            gogglesLocation[0] = i;
+            gogglesLocation[1] = j;
+            Grid.SetColumn(backgroundShape, i + 1);
+            Grid.SetRow(backgroundShape, j + 1);
+            this.grid.Children.Add(backgroundShape);
+        }
+
+        public Maze(String character) {
+            InitializeComponent();
+            CreateGrid();
+            textGrid = InsertWalls();
+            AddBottomButtons();
+            InstantiateCharacter(character.ToLower(), fishLocation);
+            InstantiateCharacter("shark", sharkLocation);
+            TextBlock backgroundShape = new TextBlock();
+            ImageBrush myBrush = new ImageBrush();
+            Image image = new Image();
+            BitmapImage bi = new BitmapImage(new Uri(MAZEFILE1 + @"\goggles.png"));
             image.Source = bi;
             myBrush.ImageSource = image.Source;
             backgroundShape.Background = myBrush;
@@ -67,15 +93,6 @@ namespace MazeEsc_ah_pe {
             Grid.SetColumn(backgroundShape, i + 1);
             Grid.SetRow(backgroundShape, j + 1);
             this.grid.Children.Add(backgroundShape);
-        }
-
-        public Maze(String character) {
-            InitializeComponent();
-            CreateGrid();
-            InsertWalls();
-            AddBottomButtons();
-            InstantiateCharacter(character.ToLower(), fishLocation);
-            InstantiateCharacter("shark", sharkLocation);
             AddCharacterMovement();
         }
 
