@@ -30,6 +30,7 @@ namespace MazeEsc_ah_pe {
 
         private Grid grid;
         private String filePath;
+        private TextBlock info;
 
         public Maze() {
             InitializeComponent();
@@ -336,6 +337,14 @@ namespace MazeEsc_ah_pe {
             button.FontSize = 16;
             button.Height = 40;
             this.grid.Children.Add(button);
+            info = new TextBlock();
+            Grid.SetColumn(info, 6);
+            Grid.SetRow(info, 0);
+            Grid.SetColumnSpan(info, 10);
+            info.Text = "Find the Goggles, Then Escape";
+            info.FontSize = 20;
+            info.Height = 40;
+            this.grid.Children.Add(info);
         }
 
         private void InstantiateCharacter(String fish, int col, int row) {
@@ -352,6 +361,21 @@ namespace MazeEsc_ah_pe {
             Grid.SetColumn(backgroundShape, col);
             Grid.SetRow(backgroundShape, row);
             this.grid.Children.Add(backgroundShape);
+        }
+
+        private Boolean Eaten()
+        {
+            if(fishLocation[0] == sharkLocation[0] && fishLocation[1] == sharkLocation[1])
+            {
+                LoseGame();
+                return true;
+            }
+            return false;
+        }
+
+        private void LoseGame()
+        {
+            info.Text = "Sorry, The Shark Ate You";
         }
 
         private void ReturnToMenu(object sender, RoutedEventArgs e) {
