@@ -28,7 +28,7 @@ namespace MazeEsc_ah_pe {
         private const int ROW_SIZE = 40;
         private const char WALL = 'x';
         private const char EMPTY = 'o';
-        private const double BAD_MOVE_CHANCE = .1;
+        private const double BAD_MOVE_CHANCE = .2;
 
         private enum Direction { Up, Down, Left, Right };
         private enum Animal { Fish, Shark };
@@ -67,7 +67,7 @@ namespace MazeEsc_ah_pe {
             goggles.Background = myBrush;
             int i = 6, j = 3;
             Random rnd = new Random();
-            while (textGrid[j - 1][i - 1] == 'x')
+            while (textGrid[i - 1][j - 1] == 'x')
             {
                 i = rnd.Next(1, 20);
                 j = rnd.Next(1, 20);
@@ -663,16 +663,16 @@ namespace MazeEsc_ah_pe {
         }
 
         public void TrainEasyShark() {
-            this.sharkMovementInterval = 1750;
+            this.sharkMovementInterval = 1250;
         }
 
         public void TrainMediumShark() {
-            this.sharkMovementInterval = 1250;
+            this.sharkMovementInterval = 750;
             this.sharkKnowsWalls = true;
         }
 
         public void TrainHardShark() {
-            this.sharkMovementInterval = 750;
+            this.sharkMovementInterval = 250;
             this.sharkKnowsWalls = true;
             this.sharkKnowsFishLocation = true;
         }
