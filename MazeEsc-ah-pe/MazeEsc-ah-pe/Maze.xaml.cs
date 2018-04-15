@@ -49,6 +49,7 @@ namespace MazeEsc_ah_pe {
         private TextBlock shark;
         private TextBlock fish;
         private String[] textGrid;
+        public Boolean canMove = true;
 
         public Maze(String character, Maze.Difficulty difficulty) {
             gameDifficulty = difficulty;
@@ -423,6 +424,7 @@ namespace MazeEsc_ah_pe {
             {
                 info.Text = "Sorry, The Shark Ate You";
             }
+            canMove = false;
         }
 
         private void AddCharacterMovement() {
@@ -436,18 +438,28 @@ namespace MazeEsc_ah_pe {
         }
 
         private new void KeyUp(object sender, KeyEventArgs e) {
-            if(e.Key == Key.W) {
-                MoveAnimal(Animal.Fish, Direction.Up);
-            } else if(e.Key == Key.S){
-                MoveAnimal(Animal.Fish, Direction.Down);
-            } else if(e.Key == Key.A){
-                MoveAnimal(Animal.Fish, Direction.Left);
-            } else if(e.Key == Key.D){
-                MoveAnimal(Animal.Fish, Direction.Right);
+            if (canMove)
+            {
+                if (e.Key == Key.W)
+                {
+                    MoveUpDown(Animal.Fish, Direction.Up);
+                }
+                else if (e.Key == Key.S)
+                {
+                    MoveUpDown(Animal.Fish, Direction.Down);
+                }
+                else if (e.Key == Key.A)
+                {
+                    MoveLeftRight(Animal.Fish, Direction.Left);
+                }
+                else if (e.Key == Key.D)
+                {
+                    MoveLeftRight(Animal.Fish, Direction.Right);
+                }
+                if (Eaten()) { WinGame(false); }
+                Grid.SetColumn(this.fish, this.fishLocation[0]);
+                Grid.SetRow(this.fish, this.fishLocation[1]);
             }
-            if (Eaten()) { WinGame(false); }
-            Grid.SetColumn(this.fish, this.fishLocation[0]);
-            Grid.SetRow(this.fish, this.fishLocation[1]);
         }
 
         private void CheckGoggles()
@@ -499,6 +511,7 @@ namespace MazeEsc_ah_pe {
         }
 
         private void ReturnToMenu(object sender, RoutedEventArgs e) {
+            canMove = true;
             Welcome welcomePage = new Welcome();
             this.NavigationService.Navigate(welcomePage);
         }
