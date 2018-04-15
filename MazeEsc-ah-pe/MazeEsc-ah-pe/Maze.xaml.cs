@@ -37,6 +37,7 @@ namespace MazeEsc_ah_pe {
         private int[] sharkLocation = new int[2] { 19, 20 };
         private TextBlock info;
         private int[] gogglesLocation = {8,10};
+        private TextBlock goggles;
 
         private TextBlock shark;
         private TextBlock fish;
@@ -46,27 +47,27 @@ namespace MazeEsc_ah_pe {
             CreateGrid();
             textGrid = InsertWalls();
             AddBottomButtons();
-            InstantiateCharacter("marlin", fishLocation);
-            InstantiateCharacter("shark", sharkLocation);
-            TextBlock backgroundShape = new TextBlock();
+            goggles = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
             BitmapImage bi = new BitmapImage(new Uri(MAZEFILE1 + @"\goggles.png"));
             image.Source = bi;
             myBrush.ImageSource = image.Source;
-            backgroundShape.Background = myBrush;
+            goggles.Background = myBrush;
             int i = 0, j = 0;
             Random rnd = new Random();
-            while (textGrid[i][j] != 'o')
+            while (textGrid[i][j] == 'x')
             {
                 i = rnd.Next(1, 20);
                 j = rnd.Next(1, 20);
             }
             gogglesLocation[0] = i;
             gogglesLocation[1] = j;
-            Grid.SetColumn(backgroundShape, i + 1);
-            Grid.SetRow(backgroundShape, j + 1);
-            this.grid.Children.Add(backgroundShape);
+            Grid.SetColumn(goggles, i + 1);
+            Grid.SetRow(goggles, j + 1);
+            this.grid.Children.Add(goggles);
+            InstantiateCharacter("marlin", fishLocation);
+            InstantiateCharacter("shark", sharkLocation);
         }
 
         public Maze(String character) {
@@ -74,25 +75,27 @@ namespace MazeEsc_ah_pe {
             CreateGrid();
             textGrid = InsertWalls();
             AddBottomButtons();
-            InstantiateCharacter(character.ToLower(), fishLocation);
-            InstantiateCharacter("shark", sharkLocation);
-            TextBlock backgroundShape = new TextBlock();
+            goggles = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
             BitmapImage bi = new BitmapImage(new Uri(MAZEFILE1 + @"\goggles.png"));
             image.Source = bi;
             myBrush.ImageSource = image.Source;
-            backgroundShape.Background = myBrush;
+            goggles.Background = myBrush;
             int i = 0, j = 0;
             Random rnd = new Random();
-            while (textGrid[i][j] != 'o')
+            while (textGrid[i][j] == 'x')
             {
                 i = rnd.Next(1, 20);
                 j = rnd.Next(1, 20);
             }
-            Grid.SetColumn(backgroundShape, i + 1);
-            Grid.SetRow(backgroundShape, j + 1);
-            this.grid.Children.Add(backgroundShape);
+            gogglesLocation[0] = i;
+            gogglesLocation[1] = j;
+            Grid.SetColumn(goggles, i + 1);
+            Grid.SetRow(goggles, j + 1);
+            this.grid.Children.Add(goggles);
+            InstantiateCharacter(character.ToLower(), fishLocation);
+            InstantiateCharacter("shark", sharkLocation);
             AddCharacterMovement();
         }
 
@@ -419,15 +422,21 @@ namespace MazeEsc_ah_pe {
         {
             if(fishLocation[0] == sharkLocation[0] && fishLocation[1] == sharkLocation[1])
             {
-                LoseGame();
+                WinGame(false);
                 return true;
             }
             return false;
         }
 
-        private void LoseGame()
+        private void WinGame(Boolean win)
         {
-            info.Text = "Sorry, The Shark Ate You";
+            if (win) {
+                info.Text = "Congratulations, You Escaped!";
+            }
+            else
+            {
+                info.Text = "Sorry, The Shark Ate You";
+            }
         }
 
         private void AddCharacterMovement() {
@@ -444,40 +453,66 @@ namespace MazeEsc_ah_pe {
             } else if(e.Key == Key.D){
                 MoveLeftRight(Animal.Fish, Direction.Right);
             }
+            if (Eaten()) { WinGame(false); }
             Grid.SetColumn(this.fish, this.fishLocation[0]);
             Grid.SetRow(this.fish, this.fishLocation[1]);
+        }
+
+        private void CheckGoggles()
+        {
+            if (gogglesLocation[0] + 1 == fishLocation[0] && fishLocation[1] == gogglesLocation[1] + 1)
+            {
+                gogglesLocation[0] = 25;
+                ImageBrush myBrush = new ImageBrush();
+                Image image = new Image();
+                image.Source = new BitmapImage(new Uri(MAZEFILE1 + @"\empty.png"));
+                myBrush.ImageSource = image.Source;
+                goggles.Background = myBrush;
+                info.Text = "Now Just Escape!!";
+            }
         }
 
         private void MoveUpDown(Animal animal, Direction direction) {
             if(animal == Animal.Fish) {
                 if((direction == Direction.Up) && (this.fishLocation[1] != 1)) {
                     this.fishLocation[1]--;
+                    if(textGrid[this.fishLocation[1] - 1][this.fishLocation[0] - 1] == 'x') { this.fishLocation[1]++; }
+                    if(gogglesLocation[0] == 25 && fishLocation[0] == 6 && fishLocation[1] == 1) { WinGame(true); }
                 } else if((direction == Direction.Down) && (this.fishLocation[1] != 20)) {
                     this.fishLocation[1]++;
+                    if (textGrid[this.fishLocation[1] - 1][this.fishLocation[0] - 1] == 'x') { this.fishLocation[1]--; }
                 }
             } else {
                 if((direction == Direction.Up) && (this.sharkLocation[1] != 1)) {
                     this.sharkLocation[1]--;
+                    if (textGrid[this.sharkLocation[1] - 1][this.sharkLocation[0] - 1] == 'x') { this.sharkLocation[1]++; }
                 } else if((direction == Direction.Down) && (this.sharkLocation[1] != 20)) {
                     this.sharkLocation[1]++;
+                    if (textGrid[this.sharkLocation[1] - 1][this.sharkLocation[0] - 1] == 'x') { this.sharkLocation[1]--; }
                 }
             }
+            CheckGoggles();
         }
 
         private void MoveLeftRight(Animal animal, Direction direction) {
             if(animal == Animal.Fish) {
                 if((direction == Direction.Left) && (this.fishLocation[0] != 1)) {
                     this.fishLocation[0]--;
+                    if (textGrid[this.fishLocation[1] - 1][this.fishLocation[0] - 1] == 'x') { this.fishLocation[0]++; }
                 } else if((direction == Direction.Right) && (this.fishLocation[0] != 20)) {
                     this.fishLocation[0]++;
+                    if (textGrid[this.fishLocation[1] - 1][this.fishLocation[0] - 1] == 'x') { this.fishLocation[0]--; }
                 }
             } else {
                 if((direction == Direction.Left) && (this.sharkLocation[0] != 1)) {
                     this.sharkLocation[0]--;
+                    if (textGrid[this.sharkLocation[1] - 1][this.sharkLocation[0] - 1] == 'x') { this.sharkLocation[0]++; }
                 } else if((direction == Direction.Right) && (this.sharkLocation[0] != 20)) {
                     this.sharkLocation[0]++;
+                    if (textGrid[this.sharkLocation[1] - 1][this.sharkLocation[0] - 1] == 'x') { this.sharkLocation[0]--; }
                 }
             }
+            CheckGoggles();
         }
 
         private void ReturnToMenu(object sender, RoutedEventArgs e) {
