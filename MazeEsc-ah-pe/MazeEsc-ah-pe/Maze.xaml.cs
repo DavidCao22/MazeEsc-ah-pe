@@ -28,6 +28,7 @@ namespace MazeEsc_ah_pe {
         private const int ROW_SIZE = 40;
         private const char WALL = 'x';
         private const char EMPTY = 'o';
+        private const double BAD_MOVE_CHANCE = .1;
 
         private enum Direction { Up, Down, Left, Right };
         private enum Animal { Fish, Shark };
@@ -516,13 +517,83 @@ namespace MazeEsc_ah_pe {
             this.NavigationService.Navigate(welcomePage);
         }
 
+        private int GetDistanceBetweenAnimals() {
+            int colDistanceSqrd = (this.fishLocation[0] - this.sharkLocation[0]) * (this.fishLocation[0] - this.sharkLocation[0]);
+            int rowDistanceSqrd = (this.fishLocation[1] - this.sharkLocation[1]) * (this.fishLocation[1] - this.sharkLocation[1]);
+            return colDistanceSqrd + rowDistanceSqrd;
+        }
+
+        private int GetDistanceBetweenAnimals(int[] sharkLoc) {
+            int colDistanceSqrd = (this.fishLocation[0] - sharkLoc[0]) * (this.fishLocation[0] - sharkLoc[0]);
+            int rowDistanceSqrd = (this.fishLocation[1] - sharkLoc[1]) * (this.fishLocation[1] - sharkLoc[1]);
+            return colDistanceSqrd + rowDistanceSqrd;
+        }
+
         private void MoveShark(object source, ElapsedEventArgs e) {
             Direction dir = Direction.Up;
             Random rand = new Random();
             if(this.sharkKnowsWalls && this.sharkKnowsFishLocation) {
                 Boolean unpicked = true;
+                Boolean wall = true;
+                int currDist = GetDistanceBetweenAnimals();
                 while(unpicked) {
-                    //TODO IMPLEMENT ME
+                    dir = (Direction)rand.Next(4);
+                    switch(dir) {
+                        case Direction.Up:
+                            if(this.sharkLocation[1] > 1) {
+                                wall = this.mazeWalls[this.sharkLocation[0] - 1, this.sharkLocation[1] - 2];
+                                if(!wall) {
+                                    int[] possibleLocation = new int[2] { this.sharkLocation[0], this.sharkLocation[1] - 1 };
+                                    int newDist = GetDistanceBetweenAnimals(possibleLocation);
+                                    if((newDist <= currDist) || (rand.NextDouble() < BAD_MOVE_CHANCE)) {
+                                        dir = Direction.Up;
+                                        unpicked = false;
+                                    }
+                                }
+                            }
+                            break;
+                        case Direction.Right:
+                            if(this.sharkLocation[0] < 20) {
+                                wall = this.mazeWalls[this.sharkLocation[0], this.sharkLocation[1] - 1];
+                                if(!wall) {
+                                    int[] possibleLocation = new int[2] { this.sharkLocation[0] + 1, this.sharkLocation[1] };
+                                    int newDist = GetDistanceBetweenAnimals(possibleLocation);
+                                    if((newDist <= currDist) || (rand.NextDouble() < BAD_MOVE_CHANCE)) {
+                                        dir = Direction.Right;
+                                        unpicked = false;
+                                    }
+                                }
+                            }
+                            break;
+                        case Direction.Down:
+                            if(this.sharkLocation[1] < 20) {
+                                wall = this.mazeWalls[this.sharkLocation[0] - 1, this.sharkLocation[1]];
+                                if(!wall) {
+                                    int[] possibleLocation = new int[2] { this.sharkLocation[0], this.sharkLocation[1] + 1};
+                                    int newDist = GetDistanceBetweenAnimals(possibleLocation);
+                                    if((newDist <= currDist) || (rand.NextDouble() < BAD_MOVE_CHANCE)) {
+                                        dir = Direction.Down;
+                                        unpicked = false;
+                                    }
+                                }
+                            }
+                            break;
+                        case Direction.Left:
+                            if(this.sharkLocation[0] > 1) {
+                                wall = this.mazeWalls[this.sharkLocation[0] - 2, this.sharkLocation[1] - 1];
+                                if(!wall) {
+                                    int[] possibleLocation = new int[2] { this.sharkLocation[0] - 1, this.sharkLocation[1]};
+                                    int newDist = GetDistanceBetweenAnimals(possibleLocation);
+                                    if((newDist <= currDist) || (rand.NextDouble() < BAD_MOVE_CHANCE)) {
+                                        dir = Direction.Left;
+                                        unpicked = false;
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             } else if(this.sharkKnowsWalls) {
                 Boolean unpicked = true;
@@ -574,7 +645,8 @@ namespace MazeEsc_ah_pe {
                 dir = (Direction)rand.Next(3);
             }
             MoveAnimal(Animal.Shark, dir);
-            this.Dispatcher.Invoke(() => {
+            if(Eaten()) { WinGame(false); }
+            this.Dispatcher.Invoke( () => {
                 Grid.SetColumn(this.shark, this.sharkLocation[0]);
                 Grid.SetRow(this.shark, this.sharkLocation[1]);
             });
