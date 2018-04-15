@@ -22,7 +22,7 @@ namespace MazeEsc_ah_pe {
     public partial class Maze : Page {
 
         private const String MAZEFILE1 = @"C:\Users\Anthony\Documents\CornHacks\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets";
-        private const String MAZEFILE2 = @"C:\src\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets";
+        private String MAZEFILE1 = System.IO.Path.Combine(Environment.CurrentDirectory, @"..\..\assets");
         private const int MARGIN_SIZE = 100;
         private const int COLUMN_SIZE = 40;
         private const int ROW_SIZE = 40;
@@ -254,12 +254,12 @@ namespace MazeEsc_ah_pe {
             string[] lines;
             try
             {
-                lines = System.IO.File.ReadAllLines(MAZEFILE2 + @"\maze_path.txt");
-                this.filePath = MAZEFILE2;
-            }
-            catch (DirectoryNotFoundException){
                 lines = System.IO.File.ReadAllLines(MAZEFILE1 + @"\maze_path.txt");
                 this.filePath = MAZEFILE1;
+            }
+            catch (DirectoryNotFoundException){
+                lines = System.IO.File.ReadAllLines(MAZEFILE2 + @"\maze_path.txt");
+                this.filePath = MAZEFILE2;
             }
             this.mazeWalls = new Boolean[lines.Length, lines[0].Length];
             for(int i = 0; i < lines.Length; i++) {
