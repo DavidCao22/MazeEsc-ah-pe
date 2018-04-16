@@ -21,8 +21,7 @@ namespace MazeEsc_ah_pe {
     /// </summary>
     public partial class Maze : Page {
 
-        private const String MAZEFILE1 = @"C:\Users\Anthony\Documents\CornHacks\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets";
-        private const String MAZEFILE2 = @"C:\src\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets";
+        private const String ASSETS_FILEPATH = @".\assets";
         private const int MARGIN_SIZE = 100;
         private const int COLUMN_SIZE = 40;
         private const int ROW_SIZE = 40;
@@ -61,7 +60,7 @@ namespace MazeEsc_ah_pe {
             goggles = new TextBlock();
             ImageBrush myBrush = new ImageBrush();
             Image image = new Image();
-            BitmapImage bi = new BitmapImage(new Uri(filePath + @"\goggles.png"));
+            BitmapImage bi = new BitmapImage(new Uri(filePath + @"\goggles.png", UriKind.Relative));
             image.Source = bi;
             myBrush.ImageSource = image.Source;
             goggles.Background = myBrush;
@@ -252,15 +251,8 @@ namespace MazeEsc_ah_pe {
 
         private String[] InsertWalls() {
             string[] lines;
-            try
-            {
-                lines = System.IO.File.ReadAllLines(MAZEFILE2 + @"\maze_path.txt");
-                this.filePath = MAZEFILE2;
-            }
-            catch (DirectoryNotFoundException){
-                lines = System.IO.File.ReadAllLines(MAZEFILE1 + @"\maze_path.txt");
-                this.filePath = MAZEFILE1;
-            }
+            lines = System.IO.File.ReadAllLines(ASSETS_FILEPATH + @"\maze_path.txt");
+            this.filePath = ASSETS_FILEPATH;
             this.mazeWalls = new Boolean[lines.Length, lines[0].Length];
             for(int i = 0; i < lines.Length; i++) {
                 string line = lines[i];
@@ -276,21 +268,21 @@ namespace MazeEsc_ah_pe {
                                 case "horizontal":
                                     BitmapImage bi = new BitmapImage();
                                     bi.BeginInit();
-                                    bi.UriSource = new Uri(this.filePath + @"\wall_straight.png");
+                                    bi.UriSource = new Uri(this.filePath + @"\wall_straight.png", UriKind.Relative);
                                     bi.Rotation = Rotation.Rotate90;
                                     bi.EndInit();
                                     image.Source = bi;
                                     break;
                                 case "vertical":
-                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_straight.png"));
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_straight.png", UriKind.Relative));
                                     break;
                                 case "corner_UR":
-                                    image.Source = new BitmapImage(new Uri(this.filePath + @"\wall_corner.png"));
+                                    image.Source = new BitmapImage(new Uri(this.filePath + @"\wall_corner.png", UriKind.Relative));
                                     break;
                                 case "corner_UL":
                                     BitmapImage bi1 = new BitmapImage();
                                     bi1.BeginInit();
-                                    bi1.UriSource = new Uri(this.filePath + @"\wall_corner.png");
+                                    bi1.UriSource = new Uri(this.filePath + @"\wall_corner.png", UriKind.Relative);
                                     bi1.Rotation = Rotation.Rotate270;
                                     bi1.EndInit();
                                     image.Source = bi1;
@@ -298,7 +290,7 @@ namespace MazeEsc_ah_pe {
                                 case "corner_DR":
                                     BitmapImage bi2 = new BitmapImage();
                                     bi2.BeginInit();
-                                    bi2.UriSource = new Uri(this.filePath + @"\wall_corner.png");
+                                    bi2.UriSource = new Uri(this.filePath + @"\wall_corner.png", UriKind.Relative);
                                     bi2.Rotation = Rotation.Rotate90;
                                     bi2.EndInit();
                                     image.Source = bi2;
@@ -306,18 +298,18 @@ namespace MazeEsc_ah_pe {
                                 case "corner_DL":
                                     BitmapImage bi3 = new BitmapImage();
                                     bi3.BeginInit();
-                                    bi3.UriSource = new Uri(this.filePath + @"\wall_corner.png");
+                                    bi3.UriSource = new Uri(this.filePath + @"\wall_corner.png", UriKind.Relative);
                                     bi3.Rotation = Rotation.Rotate180;
                                     bi3.EndInit();
                                     image.Source = bi3;
                                     break;
                                 case "empty":
-                                    image.Source = new BitmapImage(new Uri(this.filePath + @"\empty.png"));
+                                    image.Source = new BitmapImage(new Uri(this.filePath + @"\empty.png", UriKind.Relative));
                                     break;
                                 case "three_U":
                                     BitmapImage bi4 = new BitmapImage();
                                     bi4.BeginInit();
-                                    bi4.UriSource = new Uri(filePath + @"\wall_split.png");
+                                    bi4.UriSource = new Uri(filePath + @"\wall_split.png", UriKind.Relative);
                                     bi4.Rotation = Rotation.Rotate90;
                                     bi4.EndInit();
                                     image.Source = bi4;
@@ -325,24 +317,24 @@ namespace MazeEsc_ah_pe {
                                 case "three_D":
                                     BitmapImage bi5 = new BitmapImage();
                                     bi5.BeginInit();
-                                    bi5.UriSource = new Uri(filePath + @"\wall_split.png");
+                                    bi5.UriSource = new Uri(filePath + @"\wall_split.png", UriKind.Relative);
                                     bi5.Rotation = Rotation.Rotate270;
                                     bi5.EndInit();
                                     image.Source = bi5;
                                     break;
                                 case "three_L":
-                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_split.png"));
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_split.png", UriKind.Relative));
                                     break;
                                 case "three_R":
                                     BitmapImage bi6 = new BitmapImage();
                                     bi6.BeginInit();
-                                    bi6.UriSource = new Uri(filePath + @"\wall_split.png");
+                                    bi6.UriSource = new Uri(filePath + @"\wall_split.png", UriKind.Relative);
                                     bi6.Rotation = Rotation.Rotate180;
                                     bi6.EndInit();
                                     image.Source = bi6;
                                     break;
                                 case "four":
-                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_four.png"));
+                                    image.Source = new BitmapImage(new Uri(filePath + @"\wall_four.png", UriKind.Relative));
                                     break;
                                 default:
                                     break;
@@ -350,7 +342,7 @@ namespace MazeEsc_ah_pe {
                             break;
                         case EMPTY:
                             mazeWalls[j, i] = false;
-                            image.Source = new BitmapImage(new Uri(this.filePath + @"\empty.png"));
+                            image.Source = new BitmapImage(new Uri(this.filePath + @"\empty.png", UriKind.Relative));
                             break;
                         default:
                             break;
@@ -391,7 +383,7 @@ namespace MazeEsc_ah_pe {
             Image image = new Image();
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
-            bi.UriSource = new Uri(this.filePath + "\\" + fish + ".png");
+            bi.UriSource = new Uri(this.filePath + "\\" + fish + ".png", UriKind.Relative);
             bi.EndInit();
             image.Source = bi;
             myBrush.ImageSource = image.Source;
@@ -470,7 +462,7 @@ namespace MazeEsc_ah_pe {
                 gogglesLocation[0] = 25;
                 ImageBrush myBrush = new ImageBrush();
                 Image image = new Image();
-                image.Source = new BitmapImage(new Uri(filePath + @"\empty.png"));
+                image.Source = new BitmapImage(new Uri(filePath + @"\empty.png", UriKind.Relative));
                 myBrush.ImageSource = image.Source;
                 goggles.Background = myBrush;
                 info.Text = "Now Just Escape!!";

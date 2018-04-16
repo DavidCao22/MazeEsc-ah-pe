@@ -21,7 +21,7 @@ namespace MazeEsc_ah_pe {
     /// </summary>
     public partial class Welcome : Page {
 
-        private const String WELCOME_BACKGROUND_LOCATION = @"C:\src\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets\welcome2.png";
+        private const String WELCOME_BACKGROUND_LOCATION = @"./assets/welcome2.png";
         private readonly ArrayList CHARACTERS = new ArrayList{"Marlin", "Dory"};
         private const int NUM_COLS = 4;
         private const int NUM_ROWS = 5;
@@ -148,21 +148,12 @@ namespace MazeEsc_ah_pe {
         }
 
         private void SetBackground() {
-            Image image;
-            try
-            {
-                image = new Image()
-                {
-                    Source = new BitmapImage(new Uri(WELCOME_BACKGROUND_LOCATION))
+            Image image = new Image();
+            try {
+                image = new Image() {
+                    Source = new BitmapImage(new Uri(WELCOME_BACKGROUND_LOCATION, UriKind.Relative))
                 };
-            }
-            catch (DirectoryNotFoundException)
-            {
-                image = new Image()
-                {
-                    Source = new BitmapImage(new Uri(@"C:\Users\Anthony\Documents\CornHacks\MazeEsc-ah-pe\MazeEsc-ah-pe\MazeEsc-ah-pe\assets\welcome2.png"))
-                };
-            }
+            } catch (DirectoryNotFoundException) { }
             ImageBrush brush = new ImageBrush() {
                 ImageSource = image.Source
             };
